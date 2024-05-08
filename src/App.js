@@ -4,8 +4,11 @@ const title = 'React';
 
 function App() {
   return (
-    <div className="App">
-      <h1>Hello World</h1>
+    <div>
+      <h1>Hello {title}</h1>
+
+      <label htmlFor="search">Search:</label>
+      <input id="search" type="text"/>
     </div>
   );
 }
