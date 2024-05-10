@@ -19,11 +19,10 @@ const list = [
   }
 ];
 
-function App() {
-  return (
+const App = () => (
     <div>
       <h1>
-        welcome to the web
+        welcome to my first react app
       </h1>
 
       <Search/>
@@ -35,12 +34,10 @@ function App() {
 
     </div>
   );
-}
-function List(){
-  return (
+
+const List = () => (
     <ul>
-        {list.map(function (item) {
-          return (
+        {list.map((item) =>  (
             <li key={item.objectID}>
               <span>
                 <a href={item.url}>{item.title}</a>
@@ -49,18 +46,22 @@ function List(){
               <span>{item.num_comment}</span>
               <span>{item.points}</span>
             </li>
-          );
-        })}
+          )
+        )}
       </ul>
   );
-}
-function Search(){
+  
+const Search = () =>{
+  const handleChange = (event) => {
+    console.log(event.target.value);
+  }
   return(
     <div>
     <label htmlFor="search">Search:</label><br></br>
-      <input id="search" type="text"/>
+      <input id="search" type="text" onChange={handleChange}/>
     </div>
   );
 }
+
 
 export default App;
