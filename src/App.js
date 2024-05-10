@@ -26,13 +26,19 @@ function App() {
         welcome to the web
       </h1>
 
-      <label htmlFor="search">Search:</label><br></br>
-      <input id="search" type="text"/>
+      <Search/>
 
       <hr />
+      
       {/*render list here */}
+      <List />
 
-      <ul>
+    </div>
+  );
+}
+function List(){
+  return (
+    <ul>
         {list.map(function (item) {
           return (
             <li key={item.objectID}>
@@ -46,7 +52,13 @@ function App() {
           );
         })}
       </ul>
-      
+  );
+}
+function Search(){
+  return(
+    <div>
+    <label htmlFor="search">Search:</label><br></br>
+      <input id="search" type="text"/>
     </div>
   );
 }
