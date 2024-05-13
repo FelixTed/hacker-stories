@@ -2,6 +2,7 @@ import * as React from 'react';
 
 
 const App = () => {
+  console.log("App Rendered");
   const stories = [
     {
       title: "React",
@@ -21,30 +22,34 @@ const App = () => {
     }
   ];
 
-  const [searchTerm, setSearchTerm] = React.useState('');
+  const [searchTerm, setSearchTerm] = React.useState('React');
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
+  const searchedStories = stories.filter((story) =>
+    story.title.toLocaleLowerCase().includes(searchTerm.toLowerCase())
+  );
   return(
     <div>
       <h1>
         welcome to my first react app
       </h1>
 
-      <Search onSearch={handleSearch}/>
+      <Search search = {searchTerm} onSearch={handleSearch}/>
 
       <hr />
       
       {/*render list here */}
-      <List list = {stories} />
+      <List list = {searchedStories} />
 
     </div>
   );
 }
 
 const List = (props) =>{
+  console.log("List rendered");
   return(
     <ul>
         {props.list.map((item) =>  (
@@ -56,6 +61,7 @@ const List = (props) =>{
 }
 
   const Item = (props) =>{
+    console.log("Item Rendered");
     return(
     <li>
       <span>
@@ -68,25 +74,14 @@ const List = (props) =>{
   );
 }
   
-const Search = (props) =>{
-  // const [searchTerm, setSearchTerm] = React.useState('');
-
-  // const handleChange = (event) => {
-  //   setSearchTerm(event.target.value);
-
-  //   props.onSearch(event);
-  // };
+const Search = ({search,onSearch}) =>{
   return(
     <div>
     <label htmlFor="search">Search:</label>
-      <input id="search" type="text" onChange={props.onSearch}/>
+      <input id="search" type="text" value = {search} onChange={onSearch}/>
 
-      {/* <p>
-        Searching for <strong>{searchTerm}</strong>
-      </p> */}
     </div>
-  );
-}
+  )}
 
 
 export default App;
