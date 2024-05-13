@@ -1,8 +1,14 @@
 import * as React from 'react';
 
+const useSemiPersistentState = (key,initialState) => {
+  const [value,setValue] = React.useState(localStorage.getItem(key)||initialState);
+
+  React.useEffect(() => {localStorage.setItem(key,value);},[value,key]);
+
+  return [value,setValue];
+}
 
 const App = () => {
-  console.log("App Rendered");
   const stories = [
     {
       title: "React",
@@ -22,12 +28,17 @@ const App = () => {
     }
   ];
 
-  const [searchTerm, setSearchTerm] = React.useState('React');
+  const [searchTerm, setSearchTerm] = useSemiPersistentState(localStorage.getItem('search'),'React');
+
+  // React.useEffect(() => {
+  //   localStorage.setItem("search",searchTerm);
+  //   console.log('stored content');
+  // },[searchTerm])
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
-
+  
   const searchedStories = stories.filter((story) =>
     story.title.toLocaleLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -48,28 +59,34 @@ const App = () => {
   );
 }
 
-const List = (props) =>{
+const List = ({list}) =>{
   console.log("List rendered");
   return(
     <ul>
-        {props.list.map((item) =>  (
-            <Item key = {item.objectID} item = {item}/>
-          )
-        )}
+       {list.map(item => (
+        <Item
+          key={item.objectID}
+          title={item.title}   
+          url={item.url}
+          author={item.author}
+          num_comments={item.num_comments}
+          points={item.points}
+        />
+      ))}
       </ul>
   );
 }
 
-  const Item = (props) =>{
+  const Item = ({title,url,author,num_comments,points}) =>{
     console.log("Item Rendered");
     return(
     <li>
       <span>
-      <a href={props.item.url}>{props.item.title}</a>
+      <a href={url}>{title}</a>
       </span>
-      <span>{props.item.author}</span>
-      <span>{props.item.num_comment}</span>
-      <span>{props.item.points}</span>
+      <span>{author}</span>
+      <span>{num_comments}</span>
+      <span>{points}</span>
     </li>
   );
 }
