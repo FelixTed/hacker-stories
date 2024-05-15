@@ -1,5 +1,24 @@
 import * as React from 'react';
 
+const initialStories = [
+  {
+    title: "React",
+    url: 'https://reactjs.org',
+    author: "Jordan Walke",
+    num_comment:3,
+    points: 4,
+    objectID:3,
+  },
+  {
+    title: "Redux",
+    url: "https://redux.js.org/",
+    author:"Dan Abramov, Andrew Clarke",
+    num_comments: 3,
+    points: 4,
+    objectID:1,
+  }
+];
+
 const useSemiPersistentState = (key,initialState) => {
   const [value,setValue] = React.useState(localStorage.getItem(key)||initialState);
 
@@ -9,31 +28,15 @@ const useSemiPersistentState = (key,initialState) => {
 }
 
 const App = () => {
-  const stories = [
-    {
-      title: "React",
-      url: 'https://reactjs.org',
-      author: "Jordan Walke",
-      num_comment:3,
-      points: 4,
-      objectID:3,
-    },
-    {
-      title: "Redux",
-      url: "https://redux.js.org/",
-      author:"Dan Abramov, Andrew Clarke",
-      num_comments: 3,
-      points: 4,
-      objectID:1,
-    }
-  ];
 
   const [searchTerm, setSearchTerm] = useSemiPersistentState(localStorage.getItem('search'),'React');
 
-  // React.useEffect(() => {
-  //   localStorage.setItem("search",searchTerm);
-  //   console.log('stored content');
-  // },[searchTerm])
+  const[stories,setStories] = React.useState(initialStories);
+
+  const handleRemoveStory = (item) => {
+    const newStories = stories.filter((story) => item.objectID !== story.objectID);
+    setStories(newStories);   
+  }
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -55,40 +58,40 @@ const App = () => {
       <hr />
       
       {/*render list here */}
-      <List list = {searchedStories} />
+      <List list = {searchedStories} onRemoveItem={handleRemoveStory} />
 
     </div>
   );
 }
 
-const List = ({list}) =>{
+const List = ({list,onRemoveItem}) =>{
   console.log("List rendered");
   return(
     <ul>
        {list.map(item => (
         <Item
           key={item.objectID}
-          title={item.title}   
-          url={item.url}
-          author={item.author}
-          num_comments={item.num_comments}
-          points={item.points}
+          item = {item}
+          onRemoveItem={onRemoveItem}
         />
       ))}
       </ul>
   );
 }
 
-  const Item = ({title,url,author,num_comments,points}) =>{
-    console.log("Item Rendered");
+  const Item = ({item,onRemoveItem}) =>{
+
     return(
     <li>
       <span>
-      <a href={url}>{title}</a>
+      <a href={item.url}>{item.title}</a>
       </span>
-      <span>{author}</span>
-      <span>{num_comments}</span>
-      <span>{points}</span>
+      <span>{item.author}</span>
+      <span>{item.num_comments}</span>
+      <span>{item.points}</span>
+      <span>
+        <button type = "button" onClick={() => onRemoveItem(item)}>Dismiss</button>
+      </span>
     </li>
   );
 }
