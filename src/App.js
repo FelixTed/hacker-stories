@@ -55,24 +55,27 @@ const App = () => {
   const handleSearchInput = (event) => {
     setSearchTerm(event.target.value);
   }
-  const handleSearchSubmit = () =>{
+  const handleSearchSubmit = (event) =>{
     setUrl(`${API_ENDPOINT}${searchTerm}`);
+
+    event.preventDefault();
   }
 
-  const handleFetchStories = React.useCallback(() => {
+  const handleFetchStories = React.useCallback(async () => {
 
     dispatchStories({type: "STORIES_FETCH_INIT"});
 
-    axios
-    .get(url)
-    .then((result) => {
-      dispatchStories({
-        type: "STORIES_FETCH_SUCCESS",
+
+    try{
+    const result = await axios.get(url);
+  
+    dispatchStories({
+      type: "STORIES_FETCH_SUCCESS",
         payload: result.data.hits,
       });
-    })
-    .catch(() => dispatchStories({type:"STORIES_FETCH_FAILURE"})
-    );
+    }catch{
+      dispatchStories({type:"STORY_FETCH_FAILURE"});
+    }
     },[url]);
 
   React.useEffect(() => {
@@ -92,18 +95,8 @@ const App = () => {
       <h1>
         welcome to my first react app
       </h1>
-
-      <InputWithLabel id = "search" value = {searchTerm} isFocused onInputChange = {handleSearchInput}>
-        <strong>Search:</strong>
-      </InputWithLabel>
-
-      <button
-        type="button"
-        disabled ={!searchTerm}
-        onClick={handleSearchSubmit}
-      >
-        Submit
-      </button>
+      
+      <SearchForm searchTerm = {searchTerm} onSearchInput = {handleSearchInput} onSearchSubmit = {handleSearchSubmit}></SearchForm>
 
       <hr />
       
@@ -168,6 +161,19 @@ const InputWithLabel = ({id,type, label, value, isFocused, onInputChange,childre
 
     </>
   )}
+
+  const SearchForm = ({searchTerm,onSearchInput,onSearchSubmit}) =>(
+    <form onSubmit={onSearchSubmit}>
+    <InputWithLabel id = "search" value = {searchTerm} isFocused onInputChange = {onSearchInput}>
+      <strong>Search:</strong>
+    </InputWithLabel>
+    
+
+    <button type="submit" disabled ={!searchTerm}>
+      Submit
+    </button>
+  </form>
+  );
 
 
 export default App;
