@@ -1,8 +1,9 @@
 import * as React from 'react';
 import axios from "axios";
-import styles from './App.module.css';
+import './App.css';
 import styled from 'styled-components';
 import {ReactComponent as Check} from './check.svg';
+import { SiCreatereactapp } from "react-icons/si"
 
   const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query="
 
@@ -10,7 +11,7 @@ import {ReactComponent as Check} from './check.svg';
     switch(action.type){
       case "STORIES_FETCH_INIT":
         return {
-          ...state,
+          ...state, 
           isLoading:true,
           isError:false
         };
@@ -172,7 +173,8 @@ const App = () => {
   return(
     <StyledContainer>
       <StyledHeadlinePrimary>
-        welcome to my first react app
+        welcome to my first react app&nbsp;
+        <SiCreatereactapp />
       </StyledHeadlinePrimary>
       
       <SearchForm searchTerm = {searchTerm} onSearchInput = {handleSearchInput} onSearchSubmit = {handleSearchSubmit}></SearchForm>
@@ -217,7 +219,7 @@ const List = ({list,onRemoveItem}) =>{
       <StyledColumn width = "10%">{item.num_comments}</StyledColumn>
       <StyledColumn width ="10%">{item.points}</StyledColumn>
       <StyledColumn width = "10%">
-        <StyledButton type = "button" onClick={() => onRemoveItem(item)} >Dismiss</StyledButton>
+        <button type = "button" onClick={() => onRemoveItem(item)} className ="button buttonSmall" >Dismiss</button>
         <Check height="18px" width = "18px" />
       </StyledColumn>
     </StyledItem>
