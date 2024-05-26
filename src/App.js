@@ -47,7 +47,6 @@ const useSemiPersistentState = (key,initialState) => {
     if(!isMounted.current){
       isMounted.current = true;
     }else{
-      console.log("a");
     localStorage.setItem(key,value);
     }
   },[value,key]);
@@ -131,6 +130,14 @@ const StyledInput =styled.input`
   font-size: 24px;
 `;
 
+const getSumComments = (stories) => {
+  console.log('C');
+
+  return stories.data.reduce(
+    (result, value) => result + value.num_comments,0
+  );
+}
+
 const App = () => {
 
   const [searchTerm, setSearchTerm] = useSemiPersistentState(localStorage.getItem('search'),'React');
@@ -172,17 +179,20 @@ const App = () => {
   },[handleFetchStories]);
 
 
-  const handleRemoveStory = (item) => {
+  const handleRemoveStory = React.useCallback((item) => {
     dispatchStories({
       type: 'REMOVE_STORY',
       payload: item,
     });
-  };
+  },[]);
+
+  const sumComments = React.useMemo(() => getSumComments(stories),[stories]);
   
+  console.log("APP");
   return(
     <StyledContainer>
       <StyledHeadlinePrimary>
-        welcome to my first react app&nbsp;
+        welcome to my first react app with {sumComments} comments.&nbsp;
         <SiCreatereactapp />
       </StyledHeadlinePrimary>
       
@@ -203,7 +213,8 @@ const App = () => {
   );
 }
 
-const List = ({list,onRemoveItem}) =>{
+const List = React.memo(({list,onRemoveItem}) =>{
+  console.log("List");
   return(
     <ul>
        {list.map(item => (
@@ -216,7 +227,7 @@ const List = ({list,onRemoveItem}) =>{
       </ul>
   );
 }
-
+);
   const Item = ({item,onRemoveItem}) =>{
 
     return(
