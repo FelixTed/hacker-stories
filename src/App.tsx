@@ -14,6 +14,8 @@ import { SiCreatereactapp } from "react-icons/si"
     points: number;
   };
 
+  type Stories = Array<Story>;
+
   const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query="
 
   const storiesReducer = (state,action) => {
@@ -188,7 +190,7 @@ const App = () => {
   },[handleFetchStories]);
 
 
-  const handleRemoveStory = React.useCallback((item) => {
+  const handleRemoveStory = React.useCallback((item:Story) => {
     dispatchStories({
       type: 'REMOVE_STORY',
       payload: item,
@@ -222,7 +224,12 @@ const App = () => {
   );
 }
 
-const List = React.memo(({list,onRemoveItem}) =>{
+type ListProps = {
+  list: Stories;
+  onRemoveItem: (item: Story) => void;
+};
+
+const List = React.memo(({list,onRemoveItem}:ListProps) =>{
   console.log("List");
   return(
     <ul>
