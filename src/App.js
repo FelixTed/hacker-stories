@@ -1,20 +1,10 @@
 import * as React from 'react';
-import axios from "axios";
+import axios from 'axios';
 import './App.css';
 import styled from 'styled-components';
 import {ReactComponent as Check} from './check.svg';
 import { SiCreatereactapp } from "react-icons/si"
 
-  type Story = {
-    objectID: string;
-    url: string;
-    title:string;
-    author:string;
-    num_comments: number;
-    points: number;
-  };
-
-  type Stories = Array<Story>;
 
   const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query="
 
@@ -49,7 +39,7 @@ import { SiCreatereactapp } from "react-icons/si"
     }
   };
 
-const useSemiPersistentState = (key:string,initialState:string):[string,(newValue:string) => void] => {
+const useSemiPersistentState = (key,initialState) => {
   const isMounted = React.useRef(false);
 
   const [value,setValue] = React.useState(localStorage.getItem(key)||initialState);
@@ -190,7 +180,7 @@ const App = () => {
   },[handleFetchStories]);
 
 
-  const handleRemoveStory = React.useCallback((item:Story) => {
+  const handleRemoveStory = React.useCallback((item) => {
     dispatchStories({
       type: 'REMOVE_STORY',
       payload: item,
@@ -224,12 +214,7 @@ const App = () => {
   );
 }
 
-type ListProps = {
-  list: Stories;
-  onRemoveItem: (item: Story) => void;
-};
-
-const List = React.memo(({list,onRemoveItem}:ListProps) =>{
+const List = React.memo(({list,onRemoveItem}) =>{
   console.log("List");
   return(
     <ul>
@@ -245,12 +230,7 @@ const List = React.memo(({list,onRemoveItem}:ListProps) =>{
 }
 );
 
-  type ItemsProps ={
-    item: Story;
-    onRemoveItem: (item:Story) => void;
-  };
-
-  const Item = ({item,onRemoveItem}:ItemsProps) =>{
+  const Item = ({item,onRemoveItem}) =>{
     return(
     <StyledItem>
       <StyledColumn width = '40%'>
@@ -266,8 +246,8 @@ const List = React.memo(({list,onRemoveItem}:ListProps) =>{
     </StyledItem>
   );
 }
-  
-const InputWithLabel = ({id,type, label, value, isFocused, onInputChange,children}) =>{
+
+const InputWithLabel = ({id,type, value, isFocused, onInputChange,children}) =>{
   const inputRef = React.useRef();
 
   React.useEffect(() => {
@@ -285,6 +265,8 @@ const InputWithLabel = ({id,type, label, value, isFocused, onInputChange,childre
     </>
   )}
 
+ 
+
   const SearchForm = ({searchTerm,onSearchInput,onSearchSubmit}) =>(
     <StyledSearchForm onSubmit={onSearchSubmit}>
     <InputWithLabel id = "search" value = {searchTerm} isFocused onInputChange = {onSearchInput}>
@@ -300,3 +282,5 @@ const InputWithLabel = ({id,type, label, value, isFocused, onInputChange,childre
 
 
 export default App;
+
+export { storiesReducer, SearchForm, InputWithLabel, List, Item};
