@@ -5,6 +5,9 @@ import styled from 'styled-components';
 import {ReactComponent as Check} from './check.svg';
 import { SiCreatereactapp } from "react-icons/si"
 
+import { SearchForm} from './SearchForm';
+import {List} from './List';
+
 
   const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query="
 
@@ -214,71 +217,71 @@ const App = () => {
   );
 }
 
-const List = React.memo(({list,onRemoveItem}) =>{
-  console.log("List");
-  return(
-    <ul>
-       {list.map(item => (
-        <Item
-          key={item.objectID}
-          item = {item}
-          onRemoveItem={onRemoveItem}
-        />
-      ))}
-      </ul>
-  );
-}
-);
+// const List = React.memo(({list,onRemoveItem}) =>{
+//   console.log("List");
+//   return(
+//     <ul>
+//        {list.map(item => (
+//         <Item
+//           key={item.objectID}
+//           item = {item}
+//           onRemoveItem={onRemoveItem}
+//         />
+//       ))}
+//       </ul>
+//   );
+// }
+// );
 
-  const Item = ({item,onRemoveItem}) =>{
-    return(
-    <StyledItem>
-      <StyledColumn width = '40%'>
-      <a href={item.url}>{item.title}</a>
-      </StyledColumn>
-      <StyledColumn width ="30%">{item.author}</StyledColumn>
-      <StyledColumn width = "10%">{item.num_comments}</StyledColumn>
-      <StyledColumn width ="10%">{item.points}</StyledColumn>
-      <StyledColumn width = "10%">
-        <button type = "button" onClick={() => onRemoveItem(item)} className ="button buttonSmall" >Dismiss</button>
-        <Check height="18px" width = "18px" />
-      </StyledColumn>
-    </StyledItem>
-  );
-}
+//   const Item = ({item,onRemoveItem}) =>{
+//     return(
+//     <StyledItem>
+//       <StyledColumn width = '40%'>
+//       <a href={item.url}>{item.title}</a>
+//       </StyledColumn>
+//       <StyledColumn width ="30%">{item.author}</StyledColumn>
+//       <StyledColumn width = "10%">{item.num_comments}</StyledColumn>
+//       <StyledColumn width ="10%">{item.points}</StyledColumn>
+//       <StyledColumn width = "10%">
+//         <button type = "button" onClick={() => onRemoveItem(item)} className ="button buttonSmall" >Dismiss</button>
+//         <Check height="18px" width = "18px" />
+//       </StyledColumn>
+//     </StyledItem>
+//   );
+// }
 
-const InputWithLabel = ({id,type, value, isFocused, onInputChange,children}) =>{
-  const inputRef = React.useRef();
+// const InputWithLabel = ({id,type, value, isFocused, onInputChange,children}) =>{
+//   const inputRef = React.useRef();
 
-  React.useEffect(() => {
-    if(isFocused && inputRef.current){
-      inputRef.current.focus()
-    }
-  },[isFocused])
+//   React.useEffect(() => {
+//     if(isFocused && inputRef.current){
+//       inputRef.current.focus()
+//     }
+//   },[isFocused])
   
-  return(
-    <>
-    <StyledLabel htmlFor={id}>{children}</StyledLabel>
-    &nbsp;
-      <StyledInput ref = {inputRef} id={id} type={type} value = {value} autoFocus={isFocused} onChange={onInputChange}/>
+//   return(
+//     <>
+//     <StyledLabel htmlFor={id}>{children}</StyledLabel>
+//     &nbsp;
+//       <StyledInput ref = {inputRef} id={id} type={type} value = {value} autoFocus={isFocused} onChange={onInputChange}/>
 
-    </>
-  )}
+//     </>
+//   )}
 
  
 
-  const SearchForm = ({searchTerm,onSearchInput,onSearchSubmit}) =>(
-    <StyledSearchForm onSubmit={onSearchSubmit}>
-    <InputWithLabel id = "search" value = {searchTerm} isFocused onInputChange = {onSearchInput}>
-      <strong>Search:</strong>
-    </InputWithLabel>
+  // const SearchForm = ({searchTerm,onSearchInput,onSearchSubmit}) =>(
+  //   <StyledSearchForm onSubmit={onSearchSubmit}>
+  //   <InputWithLabel id = "search" value = {searchTerm} isFocused onInputChange = {onSearchInput}>
+  //     <strong>Search:</strong>
+  //   </InputWithLabel>
     
 
-    <StyledButtonLarge type="submit" disabled ={!searchTerm}>
-      Submit
-    </StyledButtonLarge>
-  </StyledSearchForm>
-  );
+  //   <StyledButtonLarge type="submit" disabled ={!searchTerm}>
+  //     Submit
+  //   </StyledButtonLarge>
+  // </StyledSearchForm>
+  // );
 
 
 export default App;
