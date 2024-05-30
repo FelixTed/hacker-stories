@@ -5,8 +5,8 @@ import styled from 'styled-components';
 import {ReactComponent as Check} from './check.svg';
 import { SiCreatereactapp } from "react-icons/si"
 
-import { SearchForm} from './SearchForm';
-import {List} from './List';
+import { SearchForm } from './SearchForm';
+import { List } from './List';
 
 
   const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query="
@@ -201,7 +201,7 @@ const App = () => {
       </StyledHeadlinePrimary>
       
       <SearchForm searchTerm = {searchTerm} onSearchInput = {handleSearchInput} onSearchSubmit = {handleSearchSubmit}></SearchForm>
-
+      <button>Topic</button>
       <hr />
       
       {stories.isError && <p>Something went wrong...</p>}
@@ -286,4 +286,3 @@ const App = () => {
 
 export default App;
 
-export { storiesReducer, SearchForm, InputWithLabel, List, Item};

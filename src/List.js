@@ -32,3 +32,5 @@ const List = React.memo(({list,onRemoveItem}) =>{
       </StyledItem>
     );
   }
+
+  export {List};
