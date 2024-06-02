@@ -42,6 +42,27 @@ import { SortButtons } from './SortButtons';
     }
   };
 
+const initialState = "base";
+
+const sortReducer = (state,action) => {
+  switch(action.type){
+    case "upvoteSort":
+      console.log("UPDAVOTE");
+      return "UPDAVOTE";
+      case "commentSort":
+        console.log("COMMENT");
+        return "COMMENT";
+      case "topicSort":
+        console.log("TOPIC");
+        return "TOPIC";
+      case "base":
+        console.log("AJDJD");
+        return "AJDJD";
+      default:
+        throw new Error();
+  }
+}
+
 const useSemiPersistentState = (key,initialState) => {
   const isMounted = React.useRef(false);
 
@@ -104,6 +125,28 @@ const App = () => {
     event.preventDefault();
   }
 
+  let upvotesSortState = 1;
+  let commentsSortState = 1;
+  let topicSortState = 1;
+
+  const [sortState,setSortState] = React.useReducer(sortReducer,initialState);
+
+  const handleUpvotesSort = () => {
+      console.log(upvotesSortState);
+      setSortState({type: "upvoteSort"});
+      upvotesSortState = upvotesSortState*-1;
+  };
+  const handleCommentSort = () => {
+    console.log(commentsSortState);
+    setSortState({type: "commentSort"});
+    commentsSortState = commentsSortState*-1;
+  };
+  const handleTopicSort = () => {
+    console.log(topicSortState);
+    setSortState({type: "topicSort"});
+    topicSortState = topicSortState*-1;
+  };
+
   const handleFetchStories = React.useCallback(async () => {
 
     dispatchStories({type: "STORIES_FETCH_INIT"});
@@ -125,7 +168,6 @@ const App = () => {
     handleFetchStories();
   },[handleFetchStories]);
 
-
   const handleRemoveStory = React.useCallback((item) => {
     dispatchStories({
       type: 'REMOVE_STORY',
@@ -144,7 +186,7 @@ const App = () => {
       </StyledHeadlinePrimary>
       
       <SearchForm searchTerm = {searchTerm} onSearchInput = {handleSearchInput} onSearchSubmit = {handleSearchSubmit}></SearchForm>
-      <SortButtons></SortButtons>
+      <SortButtons onUpvotesSort = {handleUpvotesSort} onCommentsSort = {handleCommentSort} onTopicSort = {handleTopicSort}></SortButtons>
       <hr />
       
       {stories.isError && <p>Something went wrong...</p>}
