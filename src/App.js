@@ -2,11 +2,11 @@ import * as React from 'react';
 import axios from 'axios';
 import './App.css';
 import styled from 'styled-components';
-import {ReactComponent as Check} from './check.svg';
 import { SiCreatereactapp } from "react-icons/si"
 
 import { SearchForm } from './SearchForm';
 import { List } from './List';
+import { SortButtons } from './SortButtons';
 
 
   const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query="
@@ -76,63 +76,6 @@ const StyledHeadlinePrimary = styled.h1`
   letter-spacing: 2px;
 `;
 
-const StyledItem = styled.li`
-display: flex;
-align-items: center;
-padding-bottom: 5px;
-`;
-
-const StyledColumn = styled.span`
-  padding: 0 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-
-  a {
-    color: inherit;
-  }
-
-  width: ${(props) => props.width};
-`;
-
-const StyledButton = styled.button`
-  background: transparent;
-  border: 1px solid #171212;
-  padding: 5px;
-  cursor: pointer;
-
-  transition: all 0.1s ease-in;
-
-  &:hover{
-    backgroud: #171212;
-    color: #ffffff;
-  }
-`;
-// const StyledButtonSmall = styled(StyledButton)`
-//   padding: 5px;
-// `;
-const StyledButtonLarge = styled(StyledButton)`
-  padding: 10px;
-`;
-const StyledSearchForm = styled.form`
-  padding: 10px 0 20 px 0;
-  dispaly: flex;
-  align-items: baseline;
-`;
-const StyledLabel = styled.label`
-  border-top: 10px solid #171212;
-  border-left: 10px solid #171212;
-  padding-left: 5px;
-  font-size: 24px;
-`;
-const StyledInput =styled.input`
-  border: none;
-  border-bottom: 1px solid #171212;
-  background-color: transparent;
-
-  font-size: 24px;
-`;
 
 const getSumComments = (stories) => {
   console.log('C');
@@ -201,7 +144,7 @@ const App = () => {
       </StyledHeadlinePrimary>
       
       <SearchForm searchTerm = {searchTerm} onSearchInput = {handleSearchInput} onSearchSubmit = {handleSearchSubmit}></SearchForm>
-      <button>Topic</button>
+      <SortButtons></SortButtons>
       <hr />
       
       {stories.isError && <p>Something went wrong...</p>}

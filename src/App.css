@@ -80,10 +80,10 @@
   background: #171212;
   color:#ffffff;
 }
-.buttonSmall {
+.button_small {
   padding:5px;
 }
-.buttonLarge{
+.button_large{
   padding:10px;
 }
 .searchForm{
@@ -108,4 +108,9 @@
 .button:hover > svg > g{
   fill: #ffffff;
   stroke: #ffffff;
+}
+.search-form {
+  padding: 10px 0 20px 0;
+  display: flex;
+  align-items: baseline;
 }
