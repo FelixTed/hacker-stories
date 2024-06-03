@@ -11,6 +11,7 @@ import { SortButtons } from './SortButtons';
 
   const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query="
 
+  
   const storiesReducer = (state,action) => {
     switch(action.type){
       case "STORIES_FETCH_INIT":
@@ -42,27 +43,45 @@ import { SortButtons } from './SortButtons';
     }
   };
 
-const initialState = "base";
+// Initial state with sort states and directions
+const initialState = {
+  upvotesSortState: 1,
+  commentsSortState: 1,
+  topicSortState: 1,
+  currentSort: "base"
+};
 
-const sortReducer = (state,action) => {
-  switch(action.type){
+// Reducer function to manage sort states and directions
+const sortReducer = (state, action) => {
+  console.log(state);
+  switch(action.type) {
     case "upvoteSort":
-      console.log("UPDAVOTE");
-      return "UPDAVOTE";
-      case "commentSort":
-        console.log("COMMENT");
-        return "COMMENT";
-      case "topicSort":
-        console.log("TOPIC");
-        return "TOPIC";
-      case "base":
-        console.log("AJDJD");
-        return "AJDJD";
-      default:
-        throw new Error();
+      return {
+        ...state,
+        upvotesSortState: state.upvotesSortState * -1,
+        currentSort: "UPVOTE"
+      };
+    case "commentSort":
+      return {
+        ...state,
+        commentsSortState: state.commentsSortState * -1,
+        currentSort: "COMMENT"
+      };
+    case "topicSort":
+      return {
+        ...state,
+        topicSortState: state.topicSortState * -1,
+        currentSort: "TOPIC"
+      };
+    case "base":
+      return {
+        ...state,
+        currentSort: "BASE"
+      };
+    default:
+      throw new Error("Unknown action type");
   }
-}
-
+};
 const useSemiPersistentState = (key,initialState) => {
   const isMounted = React.useRef(false);
 
@@ -125,26 +144,18 @@ const App = () => {
     event.preventDefault();
   }
 
-  let upvotesSortState = 1;
-  let commentsSortState = 1;
-  let topicSortState = 1;
+
 
   const [sortState,setSortState] = React.useReducer(sortReducer,initialState);
 
   const handleUpvotesSort = () => {
-      console.log(upvotesSortState);
       setSortState({type: "upvoteSort"});
-      upvotesSortState = upvotesSortState*-1;
   };
   const handleCommentSort = () => {
-    console.log(commentsSortState);
     setSortState({type: "commentSort"});
-    commentsSortState = commentsSortState*-1;
   };
   const handleTopicSort = () => {
-    console.log(topicSortState);
     setSortState({type: "topicSort"});
-    topicSortState = topicSortState*-1;
   };
 
   const handleFetchStories = React.useCallback(async () => {
@@ -176,8 +187,7 @@ const App = () => {
   },[]);
 
   const sumComments = React.useMemo(() => getSumComments(stories),[stories]);
-  
-  console.log("APP");
+
   return(
     <StyledContainer>
       <StyledHeadlinePrimary>
@@ -186,7 +196,7 @@ const App = () => {
       </StyledHeadlinePrimary>
       
       <SearchForm searchTerm = {searchTerm} onSearchInput = {handleSearchInput} onSearchSubmit = {handleSearchSubmit}></SearchForm>
-      <SortButtons onUpvotesSort = {handleUpvotesSort} onCommentsSort = {handleCommentSort} onTopicSort = {handleTopicSort}></SortButtons>
+      <SortButtons onUpvotesSort = {handleUpvotesSort} onCommentsSort = {handleCommentSort} onTopicSort = {handleTopicSort} sortState={sortState}></SortButtons>
       <hr />
       
       {stories.isError && <p>Something went wrong...</p>}
@@ -194,7 +204,7 @@ const App = () => {
       {stories.isLoading ? (
         <p>Loading ...</p>
       ):(
-        <List list = {stories.data} onRemoveItem={handleRemoveStory} />
+        <List list = {stories.data} sortState = {sortState}onRemoveItem={handleRemoveStory} />
       )}
       
 

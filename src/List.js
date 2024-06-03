@@ -42,11 +42,28 @@ const StyledButtonSmall = styled(StyledButton)`
 
 
 
-const List = React.memo(({list,onRemoveItem}) =>{
+const List = React.memo(({list,sortState,onRemoveItem}) =>{
     console.log("List");
+
+    const sortedList = React.useMemo(() => {
+        const sortFunction = (a, b) => {
+          switch (sortState.currentSort) {
+            case "UPVOTE":
+              return (a.points - b.points) * sortState.upvotesSortState;
+            case "COMMENT":
+              return (a.num_comments - b.num_comments) * sortState.commentsSortState;
+            case "TOPIC":
+              return a.title.localeCompare(b.title) * sortState.topicSortState;
+            default:
+              return 0;
+          }
+        };
+        return list.slice().sort(sortFunction);
+      }, [list, sortState]);
+
     return(
       <ul>
-         {list.map(item => (
+         {sortedList.map(item => (
           <Item
             key={item.objectID}
             item = {item}
