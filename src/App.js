@@ -7,7 +7,7 @@ import { SiCreatereactapp } from "react-icons/si"
 import { SearchForm } from './SearchForm';
 import { List } from './List';
 import { SortButtons } from './SortButtons';
-
+import { LastSearches } from './LastSearches';
 
   const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query="
 
@@ -48,7 +48,7 @@ const initialState = {
   upvotesSortState: 1,
   commentsSortState: 1,
   topicSortState: 1,
-  currentSort: "base"
+  currentSort: "BASE  "
 };
 
 // Reducer function to manage sort states and directions
@@ -125,24 +125,50 @@ const getSumComments = (stories) => {
   );
 }
 
+
+const extractSearchTerm = (url) => url.replace(API_ENDPOINT, '');
+
+const getLastSearches = (urls) => urls.reduce((result,url,index) => {
+  const searchTerm = extractSearchTerm(url);
+
+  if (index ===0) {
+    return result.concat(searchTerm);
+  }
+
+  const previousSearchTerm  = result[result.length -1];
+
+  if(searchTerm === previousSearchTerm){
+    return result;
+  } else {
+    return result.concat(searchTerm)
+  }
+},[])
+.slice(-6).slice(0,-1).map(extractSearchTerm);
+
+const getUrl = (searchTerm) => `${API_ENDPOINT}${searchTerm}`;
+
 const App = () => {
 
   const [searchTerm, setSearchTerm] = useSemiPersistentState(localStorage.getItem('search'),'React');
 
   const[stories, dispatchStories] = React.useReducer(storiesReducer,{data: [], isLoading:false, isError: false});
   
-  const[url,setUrl] = React.useState(
-    `${API_ENDPOINT}${searchTerm}`
+  const[urls,setUrls] = React.useState(
+    [getUrl(searchTerm),]
   );
 
   const handleSearchInput = (event) => {
     setSearchTerm(event.target.value);
   }
   const handleSearchSubmit = (event) =>{
-    setUrl(`${API_ENDPOINT}${searchTerm}`);
+    handleSearch(searchTerm);
 
     event.preventDefault();
   }
+  const handleSearch = (searchTerm) => {
+    const url = getUrl(searchTerm);
+    setUrls(urls.concat(url));
+  };
 
 
 
@@ -164,7 +190,8 @@ const App = () => {
 
 
     try{
-    const result = await axios.get(url);
+    const lastUrl = urls[urls.length - 1];
+    const result = await axios.get(lastUrl);
   
     dispatchStories({
       type: "STORIES_FETCH_SUCCESS",
@@ -173,7 +200,7 @@ const App = () => {
     }catch{
       dispatchStories({type:"STORY_FETCH_FAILURE"});
     }
-    },[url]);
+    },[urls]);
 
   React.useEffect(() => {
     handleFetchStories();
@@ -186,7 +213,16 @@ const App = () => {
     });
   },[]);
 
+  const handleLastSearch = (searchTerm) => {
+    setSearchTerm(searchTerm);
+    handleSearch(searchTerm);
+  }
+
+  const lastSearches = getLastSearches(urls)
+
   const sumComments = React.useMemo(() => getSumComments(stories),[stories]);
+
+console.log(urls);
 
   return(
     <StyledContainer>
@@ -196,6 +232,7 @@ const App = () => {
       </StyledHeadlinePrimary>
       
       <SearchForm searchTerm = {searchTerm} onSearchInput = {handleSearchInput} onSearchSubmit = {handleSearchSubmit}></SearchForm>
+      <LastSearches lastSearches = {lastSearches} onLastSearch={handleLastSearch}/>
       <SortButtons onUpvotesSort = {handleUpvotesSort} onCommentsSort = {handleCommentSort} onTopicSort = {handleTopicSort} sortState={sortState}></SortButtons>
       <hr />
       
@@ -211,6 +248,7 @@ const App = () => {
     </StyledContainer>
   );
 }
+
 
 // const List = React.memo(({list,onRemoveItem}) =>{
 //   console.log("List");
