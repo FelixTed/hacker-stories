@@ -40,8 +40,8 @@
   height: 100vw;
   padding: 20px;
 
-  background: #83a4d4;
-  background: linear-gradient(to left, #b6fbff,#83a4d4);
+  background: #6f8e88;
+
 
   color: #171212;
 }
@@ -114,3 +114,8 @@
   display: flex;
   align-items: baseline;
 }
+
+.button-container {
+  text-align: center;
+}
+
